@@ -12,6 +12,7 @@ const taxRouter = require('../../module/Tax/tax.route')
 const brandRouter = require('../../module/Brands/brand.route')
 const productRouter = require('../../module/Product/product.route')
 const unitRouter = require('../../module/Unit/unit.route')
+const bannerRouter = require('../../module/Banner/banner.route')
 
 router.use('/user', userRouter)
 router.use('/admin', adminRouter)
@@ -25,5 +26,6 @@ router.use('/tax', taxRouter)
 router.use('/brand', brandRouter)
 router.use('/product', productRouter)
 router.use('/unit', unitRouter)
+router.use('/banner', bannerRouter)
 
 module.exports = router

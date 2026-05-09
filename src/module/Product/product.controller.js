@@ -22,7 +22,14 @@ const createProduct = async (req, res) => {
             try { bodyData.comboItems = JSON.parse(bodyData.comboItems); } catch (err) { bodyData.comboItems = []; }
         }
 
-        // 3️⃣ Apply Type-Specific Logic
+        // 3️⃣ Sanitize Optional ObjectId Fields (Prevent CastError on empty strings)
+        ['brand', 'unit', 'subcategory', 'subSubcategory', 'taxRule'].forEach(field => {
+            if (bodyData[field] === "" || bodyData[field] === "null" || bodyData[field] === "undefined") {
+                delete bodyData[field];
+            }
+        });
+
+        // 4️⃣ Apply Type-Specific Logic
         switch (bodyData.productType) {
             case 'single':
                 bodyData.variants = [];
@@ -105,8 +112,10 @@ const getAllProducts = async (req, res) => {
         const products = await Product.find(query)
             .populate('category', 'name')
             .populate('subcategory', 'name')
+            .populate('subSubcategory', 'name')
             .populate('brand', 'name logo')
             .populate('unit', 'name shorthand')
+            .populate('taxRule', 'name rate')
             .sort(sortOptions)
             .skip(skip)
             .limit(parseInt(limit));
@@ -129,6 +138,7 @@ const getProductById = async (req, res) => {
         const product = await Product.findById(req.params.id)
             .populate('category')
             .populate('subcategory')
+            .populate('subSubcategory')
             .populate('brand')
             .populate('unit')
             .populate('taxRule');
@@ -161,6 +171,13 @@ const updateProduct = async (req, res) => {
         if (typeof bodyData.comboItems === 'string') {
             try { bodyData.comboItems = JSON.parse(bodyData.comboItems); } catch (err) {}
         }
+
+        // Sanitize Optional ObjectId Fields
+        ['brand', 'unit', 'subcategory', 'subSubcategory', 'taxRule'].forEach(field => {
+            if (bodyData[field] === "" || bodyData[field] === "null" || bodyData[field] === "undefined") {
+                bodyData[field] = null; // Use null for updates to clear the field
+            }
+        });
 
         const updatedProduct = await Product.findByIdAndUpdate(
             productId,

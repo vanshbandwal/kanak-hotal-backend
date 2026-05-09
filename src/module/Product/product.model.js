@@ -64,6 +64,11 @@ const productSchema = new mongoose.Schema({
         ref: 'Subcategory',
         required: false 
     },
+    subSubcategory: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'SubSubcategory',
+        required: false 
+    },
 
     // 💰 Pricing for 'Single' dishes
     price: { 
