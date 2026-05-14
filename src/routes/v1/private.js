@@ -15,6 +15,7 @@ const unitRouter = require('../../module/Unit/unit.route')
 const bannerRouter = require('../../module/Banner/banner.route')
 const customerRouter = require('../../module/Customer/customer.route')
 const queryRouter = require('../../module/Query/query.route')
+const servicePartnerRouter = require('../../module/ServicePartner/servicePartner.route')
 
 router.use('/user', userRouter)
 router.use('/admin', adminRouter)
@@ -31,5 +32,6 @@ router.use('/unit', unitRouter)
 router.use('/banner', bannerRouter)
 router.use('/customer', customerRouter)
 router.use('/query', queryRouter)
+router.use('/service-partner', servicePartnerRouter)
 
 module.exports = router

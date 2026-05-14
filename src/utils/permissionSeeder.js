@@ -48,7 +48,13 @@ const permissions = [
     { name: "CREATE_USER", module: "USER", action: "CREATE" },
     { name: "VIEW_USER",   module: "USER", action: "VIEW"   },
     { name: "EDIT_USER",   module: "USER", action: "EDIT"   },
-    { name: "DELETE_USER", module: "USER", action: "DELETE" }
+    { name: "DELETE_USER", module: "USER", action: "DELETE" },
+
+    // 🤝 SERVICE PARTNER
+    { name: "CREATE_PARTNER", module: "PARTNER", action: "CREATE" },
+    { name: "VIEW_PARTNER",   module: "PARTNER", action: "VIEW"   },
+    { name: "UPDATE_PARTNER", module: "PARTNER", action: "UPDATE" },
+    { name: "DELETE_PARTNER", module: "PARTNER", action: "DELETE" }
 ];
 
 const seedPermissions = async () => {
