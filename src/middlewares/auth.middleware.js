@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const config = require("../config/config");
 const User = require("../module/User/user.model");
 const Admin = require("../module/Admin/admin.model");
+const Customer = require("../module/Customer/customer.model");
 
 const authMiddleware = async (req, res, next) => {
     try {
@@ -18,6 +19,11 @@ const authMiddleware = async (req, res, next) => {
         // If not found in User collection, check Admin collection
         if (!user) {
             user = await Admin.findById(decoded.id);
+        }
+
+        // If still not found, check Customer collection
+        if (!user) {
+            user = await Customer.findById(decoded.id);
         }
 
         if (!user) {

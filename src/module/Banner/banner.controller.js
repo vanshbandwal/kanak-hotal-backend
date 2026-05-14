@@ -22,20 +22,40 @@ const createBanner = async (req, res) => {
     }
 };
 
-// 📖 Get All Banners
+// 📖 Get All Banners (Paginated)
 const getAllBanners = async (req, res) => {
     try {
-        const { isActive, type } = req.query;
+        const { isActive, type, search, page = 1, limit = 10, sort = 'order', order = 'asc' } = req.query;
         const query = {};
         
         if (isActive !== undefined) query.isActive = isActive === 'true';
         if (type) query.type = type;
+        if (search) {
+            query.$or = [
+                { title: { $regex: search, $options: 'i' } },
+                { subtitle: { $regex: search, $options: 'i' } }
+            ];
+        }
 
-        const banners = await Banner.find(query).sort({ order: 1, createdAt: -1 });
+        const skip = (parseInt(page) - 1) * parseInt(limit);
+        const sortOptions = {};
+        sortOptions[sort] = order === 'desc' ? -1 : 1;
+
+        const totalItems = await Banner.countDocuments(query);
+        const banners = await Banner.find(query)
+            .sort(sortOptions)
+            .skip(skip)
+            .limit(parseInt(limit));
 
         res.status(200).json({
             success: true,
-            data: banners
+            data: banners,
+            pagination: {
+                totalItems,
+                totalPages: Math.ceil(totalItems / limit),
+                currentPage: parseInt(page),
+                limit: parseInt(limit)
+            }
         });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
