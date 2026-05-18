@@ -22,7 +22,7 @@ const adminSchemas = {
             name: Joi.string().min(2).max(50).trim(),
             email: Joi.string().email().trim().lowercase(),
             phone: Joi.string().allow('', null),
-        }).min(1)
+        })
     },
     changePassword: {
         body: Joi.object({
@@ -30,6 +30,15 @@ const adminSchemas = {
             newPassword: Joi.string().min(8).required().messages({
                 'string.min': 'New password must be at least 8 characters long',
             }),
+            otp: Joi.string().length(6).required().messages({
+                'string.length': 'OTP must be exactly 6 digits long',
+                'any.required': 'OTP is required to change password'
+            }),
+        })
+    },
+    requestPasswordOtp: {
+        body: Joi.object({
+            currentPassword: Joi.string().required(),
         })
     },
     forgotPassword: {

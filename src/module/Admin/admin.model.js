@@ -49,6 +49,20 @@ const adminSchema = new mongoose.Schema(
         lastLogin: {
             type: Date,
         },
+
+        // 🔑 Session & OTP Security
+        tokenVersion: {
+            type: Number,
+            default: 1,
+        },
+
+        passwordChangeOtp: {
+            type: String,
+        },
+
+        passwordChangeOtpExpiry: {
+            type: Date,
+        },
     },
     {
         timestamps: true, // createdAt, updatedAt

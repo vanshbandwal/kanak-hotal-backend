@@ -77,7 +77,12 @@ const adminVerifyOtp = asyncHandler(async (req, res) => {
  * @access  Private (Admin)
  */
 const adminCompleteRegistration = asyncHandler(async (req, res) => {
-  const { partnerId, name, email, vehicleType, vehicleNumber } = req.body;
+  const { 
+    partnerId, name, email, 
+    vehicle, kycStatus, documents,
+    walletBalance, totalEarnings,
+    isOnline, isActive, isVerified 
+  } = req.body;
 
   const partner = await ServicePartner.findById(partnerId);
 
@@ -86,18 +91,66 @@ const adminCompleteRegistration = asyncHandler(async (req, res) => {
     throw new Error("Partner not found");
   }
 
-  if (!partner.isVerified) {
+  if (!partner.isVerified && !isVerified) {
     res.status(400);
     throw new Error("Phone number must be verified before completing profile");
   }
 
-  partner.name = name;
-  partner.email = email;
-  partner.vehicle = {
-    type: vehicleType,
-    number: vehicleNumber
-  };
-  partner.kycStatus = "Pending";
+  // Handle files
+  if (req.files) {
+    if (req.files.avatar) partner.avatar = req.files.avatar[0].path;
+    
+    // Aadhaar
+    if (req.files.aadhaarFront || req.files.aadhaarBack) {
+      partner.documents.aadhaar = {
+        ...partner.documents.aadhaar,
+        ...(req.files.aadhaarFront && { frontImage: req.files.aadhaarFront[0].path }),
+        ...(req.files.aadhaarBack && { backImage: req.files.aadhaarBack[0].path }),
+      };
+    }
+
+    // PAN
+    if (req.files.panImage) {
+      partner.documents.pan = {
+        ...partner.documents.pan,
+        image: req.files.panImage[0].path
+      };
+    }
+
+    // DL
+    if (req.files.dlImage) {
+      partner.documents.drivingLicense = {
+        ...partner.documents.drivingLicense,
+        image: req.files.dlImage[0].path
+      };
+    }
+  }
+
+  partner.name = name || partner.name;
+  partner.email = email || partner.email;
+  
+  if (vehicle) {
+    const v = typeof vehicle === 'string' ? JSON.parse(vehicle) : vehicle;
+    partner.vehicle = { ...partner.vehicle, ...v };
+  }
+
+  if (documents) {
+    const d = typeof documents === 'string' ? JSON.parse(documents) : documents;
+    partner.documents = {
+      ...partner.documents,
+      aadhaar: { ...partner.documents.aadhaar, ...(d.aadhaar || {}) },
+      pan: { ...partner.documents.pan, ...(d.pan || {}) },
+      drivingLicense: { ...partner.documents.drivingLicense, ...(d.drivingLicense || {}) },
+    };
+  }
+
+  partner.kycStatus = kycStatus || "Pending";
+  partner.walletBalance = walletBalance || partner.walletBalance;
+  partner.totalEarnings = totalEarnings || partner.totalEarnings;
+  partner.isOnline = isOnline ?? partner.isOnline;
+  partner.isActive = isActive ?? partner.isActive;
+  partner.isVerified = isVerified ?? partner.isVerified;
+
   await partner.save();
 
   res.status(200).json({
@@ -230,7 +283,13 @@ const adminGetPartnerById = asyncHandler(async (req, res) => {
  * @access  Private (Admin)
  */
 const adminUpdatePartner = asyncHandler(async (req, res) => {
-  const { name, email, vehicleType, vehicleNumber } = req.body;
+  const { 
+    name, email, 
+    vehicle, kycStatus, documents,
+    walletBalance, totalEarnings,
+    isOnline, isActive, isVerified 
+  } = req.body;
+
   const partner = await ServicePartner.findById(req.params.id);
 
   if (!partner) {
@@ -238,15 +297,60 @@ const adminUpdatePartner = asyncHandler(async (req, res) => {
     throw new Error("Partner not found");
   }
 
+  // Handle files
+  if (req.files) {
+    if (req.files.avatar) partner.avatar = req.files.avatar[0].path;
+    
+    // Aadhaar
+    if (req.files.aadhaarFront || req.files.aadhaarBack) {
+      partner.documents.aadhaar = {
+        ...partner.documents.aadhaar,
+        ...(req.files.aadhaarFront && { frontImage: req.files.aadhaarFront[0].path }),
+        ...(req.files.aadhaarBack && { backImage: req.files.aadhaarBack[0].path }),
+      };
+    }
+
+    // PAN
+    if (req.files.panImage) {
+      partner.documents.pan = {
+        ...partner.documents.pan,
+        image: req.files.panImage[0].path
+      };
+    }
+
+    // DL
+    if (req.files.dlImage) {
+      partner.documents.drivingLicense = {
+        ...partner.documents.drivingLicense,
+        image: req.files.dlImage[0].path
+      };
+    }
+  }
+
   partner.name = name || partner.name;
   partner.email = email || partner.email;
   
-  if (vehicleType || vehicleNumber) {
-    partner.vehicle = {
-      type: vehicleType || partner.vehicle.type,
-      number: vehicleNumber || partner.vehicle.number,
+  if (vehicle) {
+    const v = typeof vehicle === 'string' ? JSON.parse(vehicle) : vehicle;
+    partner.vehicle = { ...partner.vehicle, ...v };
+  }
+
+  if (documents) {
+    const d = typeof documents === 'string' ? JSON.parse(documents) : documents;
+    partner.documents = {
+      ...partner.documents,
+      aadhaar: { ...partner.documents.aadhaar, ...(d.aadhaar || {}) },
+      pan: { ...partner.documents.pan, ...(d.pan || {}) },
+      drivingLicense: { ...partner.documents.drivingLicense, ...(d.drivingLicense || {}) },
     };
   }
+
+  partner.kycStatus = kycStatus || partner.kycStatus;
+  partner.walletBalance = walletBalance || partner.walletBalance;
+  partner.totalEarnings = totalEarnings || partner.totalEarnings;
+  partner.isOnline = isOnline ?? partner.isOnline;
+  partner.isActive = isActive ?? partner.isActive;
+  partner.isVerified = isVerified ?? partner.isVerified;
 
   await partner.save();
 
