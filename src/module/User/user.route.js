@@ -1,26 +1,27 @@
 const express = require("express");
 const uploadAvatar = require("../../middlewares/upload.middleware");
 const authMiddleware = require("../../middlewares/auth.middleware");
+const validate = require("../../middlewares/validate");
+const userSchemas = require("./user.validation");
 const userController = require("./user.controller");
 const router = express.Router();
 
-// Controllers (you
 // =========================
 // 🧾 AUTH ROUTES
 // =========================
 
 // Signup
-router.post("/signup", userController.signup);
+router.post("/signup", validate(userSchemas.signup), userController.signup);
 
 // Login
-router.post("/login", userController.login);
+router.post("/login", validate(userSchemas.login), userController.login);
 
 
 // Send OTP
-router.post("/send-otp", userController.sendOtp);
+router.post("/send-otp", validate(userSchemas.sendOtp), userController.sendOtp);
 
 // Verify OTP
-router.post("/verify-otp", userController.verifyOtp);
+router.post("/verify-otp", validate(userSchemas.verifyOtp), userController.verifyOtp);
 
 // Logout
 router.post("/logout", authMiddleware, userController.logout);
@@ -35,7 +36,7 @@ router.post("/logout", authMiddleware, userController.logout);
 router.get("/me", authMiddleware, userController.getProfile);
 
 // Update Profile
-router.put("/update", authMiddleware, userController.updateProfile);
+router.put("/update", authMiddleware, validate(userSchemas.updateProfile), userController.updateProfile);
 
 // Upload Avatar
 router.post(
@@ -52,7 +53,7 @@ router.post(
 // =========================
 
 // Add Address
-router.post("/address", authMiddleware, userController.addAddress);
+router.post("/address", authMiddleware, validate(userSchemas.address), userController.addAddress);
 
 // Get All Addresses
 router.get("/address", authMiddleware, userController.getAddresses);
@@ -61,6 +62,7 @@ router.get("/address", authMiddleware, userController.getAddresses);
 router.put(
   "/address/:id",
   authMiddleware,
+  validate(userSchemas.updateAddress),
   userController.updateAddress
 );
 

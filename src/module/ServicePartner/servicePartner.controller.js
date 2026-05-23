@@ -96,7 +96,31 @@ const adminCompleteRegistration = asyncHandler(async (req, res) => {
     throw new Error("Phone number must be verified before completing profile");
   }
 
-  // Handle files
+  partner.name = name || partner.name;
+  partner.email = email || partner.email;
+  
+  if (vehicle) {
+    const v = typeof vehicle === 'string' ? JSON.parse(vehicle) : vehicle;
+    partner.vehicle = { ...partner.vehicle, ...v };
+  }
+
+  if (documents) {
+    const d = typeof documents === 'string' ? JSON.parse(documents) : documents;
+    
+    // Protect image paths from being overwritten by text body empty strings or full URLs using ES6 rest destructuring
+    const { frontImage, backImage, ...aadhaarDetails } = d.aadhaar || {};
+    const { image: panImage, ...panDetails } = d.pan || {};
+    const { image: dlImage, ...dlDetails } = d.drivingLicense || {};
+
+    partner.documents = {
+      ...partner.documents,
+      aadhaar: { ...partner.documents.aadhaar, ...aadhaarDetails },
+      pan: { ...partner.documents.pan, ...panDetails },
+      drivingLicense: { ...partner.documents.drivingLicense, ...dlDetails },
+    };
+  }
+
+  // Handle files AFTER merging req.body.documents so that new uploads are not overwritten!
   if (req.files) {
     if (req.files.avatar) partner.avatar = req.files.avatar[0].path;
     
@@ -124,24 +148,6 @@ const adminCompleteRegistration = asyncHandler(async (req, res) => {
         image: req.files.dlImage[0].path
       };
     }
-  }
-
-  partner.name = name || partner.name;
-  partner.email = email || partner.email;
-  
-  if (vehicle) {
-    const v = typeof vehicle === 'string' ? JSON.parse(vehicle) : vehicle;
-    partner.vehicle = { ...partner.vehicle, ...v };
-  }
-
-  if (documents) {
-    const d = typeof documents === 'string' ? JSON.parse(documents) : documents;
-    partner.documents = {
-      ...partner.documents,
-      aadhaar: { ...partner.documents.aadhaar, ...(d.aadhaar || {}) },
-      pan: { ...partner.documents.pan, ...(d.pan || {}) },
-      drivingLicense: { ...partner.documents.drivingLicense, ...(d.drivingLicense || {}) },
-    };
   }
 
   partner.kycStatus = kycStatus || "Pending";
@@ -183,6 +189,7 @@ const adminGetAllPartners = asyncHandler(async (req, res) => {
 
   const count = await ServicePartner.countDocuments({ ...keyword, ...statusFilter });
   const partners = await ServicePartner.find({ ...keyword, ...statusFilter })
+    .select("_id name phone avatar vehicle.type vehicle.number kycStatus isActive isOnline")
     .limit(pageSize)
     .skip(pageSize * (page - 1))
     .sort({ createdAt: -1 });
@@ -297,7 +304,31 @@ const adminUpdatePartner = asyncHandler(async (req, res) => {
     throw new Error("Partner not found");
   }
 
-  // Handle files
+  partner.name = name || partner.name;
+  partner.email = email || partner.email;
+  
+  if (vehicle) {
+    const v = typeof vehicle === 'string' ? JSON.parse(vehicle) : vehicle;
+    partner.vehicle = { ...partner.vehicle, ...v };
+  }
+
+  if (documents) {
+    const d = typeof documents === 'string' ? JSON.parse(documents) : documents;
+    
+    // Protect image paths from being overwritten by text body empty strings or full URLs using ES6 rest destructuring
+    const { frontImage, backImage, ...aadhaarDetails } = d.aadhaar || {};
+    const { image: panImage, ...panDetails } = d.pan || {};
+    const { image: dlImage, ...dlDetails } = d.drivingLicense || {};
+
+    partner.documents = {
+      ...partner.documents,
+      aadhaar: { ...partner.documents.aadhaar, ...aadhaarDetails },
+      pan: { ...partner.documents.pan, ...panDetails },
+      drivingLicense: { ...partner.documents.drivingLicense, ...dlDetails },
+    };
+  }
+
+  // Handle files AFTER merging req.body.documents so that new uploads are not overwritten!
   if (req.files) {
     if (req.files.avatar) partner.avatar = req.files.avatar[0].path;
     
@@ -325,24 +356,6 @@ const adminUpdatePartner = asyncHandler(async (req, res) => {
         image: req.files.dlImage[0].path
       };
     }
-  }
-
-  partner.name = name || partner.name;
-  partner.email = email || partner.email;
-  
-  if (vehicle) {
-    const v = typeof vehicle === 'string' ? JSON.parse(vehicle) : vehicle;
-    partner.vehicle = { ...partner.vehicle, ...v };
-  }
-
-  if (documents) {
-    const d = typeof documents === 'string' ? JSON.parse(documents) : documents;
-    partner.documents = {
-      ...partner.documents,
-      aadhaar: { ...partner.documents.aadhaar, ...(d.aadhaar || {}) },
-      pan: { ...partner.documents.pan, ...(d.pan || {}) },
-      drivingLicense: { ...partner.documents.drivingLicense, ...(d.drivingLicense || {}) },
-    };
   }
 
   partner.kycStatus = kycStatus || partner.kycStatus;
