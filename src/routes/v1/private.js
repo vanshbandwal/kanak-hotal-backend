@@ -16,6 +16,7 @@ const bannerRouter = require('../../module/Banner/banner.route')
 const customerRouter = require('../../module/Customer/customer.route')
 const queryRouter = require('../../module/Query/query.route')
 const servicePartnerRouter = require('../../module/ServicePartner/servicePartner.route')
+const couponsRouter = require('../../module/Coupons/coupons.route')
 
 router.use('/user', userRouter)
 router.use('/admin', adminRouter)
@@ -33,5 +34,6 @@ router.use('/banner', bannerRouter)
 router.use('/customer', customerRouter)
 router.use('/query', queryRouter)
 router.use('/service-partner', servicePartnerRouter)
+router.use('/coupon', couponsRouter)
 
 module.exports = router

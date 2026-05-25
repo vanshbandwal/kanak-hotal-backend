@@ -12,7 +12,7 @@ const asyncHandler = require('express-async-handler');
  */
 const createCoupon = asyncHandler(async (req, res) => {
     const { code, description, discountType, discountValue, minPurchaseAmount, maxDiscountAmount, startDate, endDate, usageLimit, userCountLimit } = req.body;
-    
+
     // Validate required fields
     if (!code || !discountType || !discountValue || !startDate || !endDate) {
         res.status(400);
@@ -20,7 +20,7 @@ const createCoupon = asyncHandler(async (req, res) => {
     }
 
     // Check for existing coupon code
-    const existingcoupon = await coupons.findOne({code});
+    const existingcoupon = await coupons.findOne({ code });
     if (existingcoupon) {
         res.status(400);
         throw new Error('Coupon code already exists.');
@@ -42,7 +42,7 @@ const createCoupon = asyncHandler(async (req, res) => {
     res.status(201).json(newcoupon);
 });
 
-const getAllCoupons = asyncHandler(async (req,res) =>{
+const getAllCoupons = asyncHandler(async (req, res) => {
     const allcoupons = await coupons.find();
     res.status(200).json(allcoupons)
 })
@@ -50,7 +50,7 @@ const updateCoupon = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const { code, description, discountType, discountValue, minPurchaseAmount, maxDiscountAmount,
         startDate, endDate, usageLimit, userCountLimit } = req.body;
-    
+
     let coupon = await coupons.findById(id);
     if (!coupon) {
         res.status(404);
@@ -75,14 +75,14 @@ const deleteCoupon = asyncHandler(async (req, res) => {
         res.status(404);
         throw new Error('Coupon not found.');
     }
-    
+
     await coupons.findByIdAndDelete(id);
     res.status(200).json({ message: 'Coupon deleted successfully.' });
 });
 
 const patchCoupon = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    
+
     let coupon = await coupons.findById(id);
     if (!coupon) {
         res.status(404);
@@ -90,11 +90,11 @@ const patchCoupon = asyncHandler(async (req, res) => {
     }
 
     const allowedUpdates = [
-        'code', 'description', 'discountType', 'discountValue', 
-        'minPurchaseAmount', 'maxDiscountAmount', 'startDate', 
+        'code', 'description', 'discountType', 'discountValue',
+        'minPurchaseAmount', 'maxDiscountAmount', 'startDate',
         'endDate', 'usageLimit', 'userCountLimit'
     ];
-    
+
     const updateData = {};
     Object.keys(req.body).forEach(key => {
         if (allowedUpdates.includes(key)) {

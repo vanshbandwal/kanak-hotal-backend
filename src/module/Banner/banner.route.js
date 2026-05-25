@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { 
-    createBanner, 
-    getAllBanners, 
-    getBannerById, 
-    updateBanner, 
-    deleteBanner 
+const {
+    createBanner,
+    getAllBanners,
+    getBannerById,
+    updateBanner,
+    deleteBanner
 } = require('./banner.controller');
 const authMiddleware = require('../../middlewares/auth.middleware');
 const { checkPermission } = require('../../middleware/rbac.middleware');

@@ -16,7 +16,7 @@ const couponSchema = new monsgoose.Schema({
         enum:['percentage','fixed'],
         required:true
     },
-    discountvalue:{
+    discountValue:{
         type:Number,
         required:true
     },
@@ -38,7 +38,7 @@ const couponSchema = new monsgoose.Schema({
     usageLimit:{
         type:Number
     },
-    usercountLimit:{
+    userCountLimit:{
         type:Number
     },
     isActive:{
