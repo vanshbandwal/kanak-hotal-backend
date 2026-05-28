@@ -3,12 +3,13 @@ const Cart = require('./cart.model'); // Use Capital C for Model
 const Product = require('../Product/product.model');
 
 const addToCart = AsyncHandler(async (req, res) => {
-    // You can also get customerId from req.user._id if using authentication
-    const { customerId, productId, quantity, couponId } = req.body;
+    // Get customerId securely from the authenticated user (auth middleware)
+    const customerId = req.user._id;
+    const { productId, quantity, couponId } = req.body;
 
-    if (!customerId || !productId) {
+    if (!productId) {
         res.status(400);
-        throw new Error('Customer ID and Product ID are required');
+        throw new Error('Product ID is required');
     }
 
     // 1. Find if the customer already has an active cart
@@ -47,7 +48,27 @@ const addToCart = AsyncHandler(async (req, res) => {
         res.status(201).json(newCart);
     }
 });
+const getUserCart = AsyncHandler(async (req, res) => {
+    const customerId = req.user._id;
 
+    const cart = await Cart.findOne({ customer: customerId })
+        .populate('items.product', 'name price image'); // Customize if needed
+
+    if (!cart) {
+        res.status(404);
+        throw new Error('Cart not found');
+    }
+
+    res.status(200).json(cart);
+});
+const removeFromCart = AsyncHandler(async (req, res) => {
+    const customerId = req.user._id;
+    const { productId } = req.body;
+    const cart = await Cart.findOne({ customer: customerId });
+
+
+})
 module.exports = {
-    addToCart
+    addToCart,
+    getUserCart
 };

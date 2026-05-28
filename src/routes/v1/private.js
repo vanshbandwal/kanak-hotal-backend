@@ -17,6 +17,7 @@ const customerRouter = require('../../module/Customer/customer.route')
 const queryRouter = require('../../module/Query/query.route')
 const servicePartnerRouter = require('../../module/ServicePartner/servicePartner.route')
 const couponsRouter = require('../../module/Coupons/coupons.route')
+const cartRouter = require('../../module/Cart/cart.route')
 
 router.use('/user', userRouter)
 router.use('/admin', adminRouter)
@@ -35,5 +36,5 @@ router.use('/customer', customerRouter)
 router.use('/query', queryRouter)
 router.use('/service-partner', servicePartnerRouter)
 router.use('/coupon', couponsRouter)
-
+router.use('/cart', cartRouter)
 module.exports = router
