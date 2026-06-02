@@ -32,8 +32,7 @@ const adminSendOtp = asyncHandler(async (req, res) => {
   partner.otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
   await partner.save();
 
-  res.status(200).json({
-    success: true,
+  res.status(200).json({ success: true, 
     message: "OTP sent successfully",
     otp, // In production, send via SMS
   });
@@ -64,8 +63,7 @@ const adminVerifyOtp = asyncHandler(async (req, res) => {
   partner.otpExpiry = undefined;
   await partner.save();
 
-  res.status(200).json({
-    success: true,
+  res.status(200).json({ success: true, 
     message: "OTP verified successfully",
     partnerId: partner._id
   });
@@ -159,8 +157,7 @@ const adminCompleteRegistration = asyncHandler(async (req, res) => {
 
   await partner.save();
 
-  res.status(200).json({
-    success: true,
+  res.status(200).json({ success: true, 
     message: "Service Partner registration completed successfully",
     partner
   });
@@ -194,8 +191,7 @@ const adminGetAllPartners = asyncHandler(async (req, res) => {
     .skip(pageSize * (page - 1))
     .sort({ createdAt: -1 });
 
-  res.status(200).json({
-    success: true,
+  res.status(200).json({ success: true, 
     partners,
     page,
     pages: Math.ceil(count / pageSize),
@@ -240,8 +236,7 @@ const adminUpdateKycStatus = asyncHandler(async (req, res) => {
 
   await partner.save();
 
-  res.status(200).json({
-    success: true,
+  res.status(200).json({ success: true, 
     message: `Document ${docType} updated to ${status}`,
     partner,
   });
@@ -263,8 +258,7 @@ const adminTogglePartnerStatus = asyncHandler(async (req, res) => {
   partner.isActive = !partner.isActive;
   await partner.save();
 
-  res.status(200).json({
-    success: true,
+  res.status(200).json({ success: true, 
     message: `Partner ${partner.isActive ? "activated" : "deactivated"}`,
     isActive: partner.isActive,
   });
@@ -281,7 +275,7 @@ const adminGetPartnerById = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("Partner not found");
   }
-  res.status(200).json({ success: true, partner });
+  res.status(200).json({ success: true,  partner });
 });
 
 /**
@@ -367,8 +361,7 @@ const adminUpdatePartner = asyncHandler(async (req, res) => {
 
   await partner.save();
 
-  res.status(200).json({
-    success: true,
+  res.status(200).json({ success: true, 
     message: "Partner updated successfully",
     partner,
   });
@@ -389,8 +382,7 @@ const adminDeletePartner = asyncHandler(async (req, res) => {
 
   await partner.deleteOne();
 
-  res.status(200).json({
-    success: true,
+  res.status(200).json({ success: true, 
     message: "Partner removed successfully",
   });
 });

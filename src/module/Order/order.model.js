@@ -13,6 +13,14 @@ const orderSchema = new mongoose.Schema({
             ref: 'Product',
             required: true
         },
+        variant: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: false
+        },
+        variantName: {
+            type: String, // E.g., "Half Plate". Hardcoded to lock it in.
+            required: false
+        },
         qty: {
             type: Number,
             required: true,

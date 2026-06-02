@@ -39,12 +39,12 @@ const createCoupon = asyncHandler(async (req, res) => {
         userCountLimit
     });
 
-    res.status(201).json(newcoupon);
+    res.status(201).json({ success: true, data: newcoupon });
 });
 
 const getAllCoupons = asyncHandler(async (req, res) => {
     const allcoupons = await coupons.find();
-    res.status(200).json(allcoupons)
+    res.status(200).json({ success: true, data: allcoupons })
 })
 const updateCoupon = asyncHandler(async (req, res) => {
     const { id } = req.params;
@@ -65,7 +65,7 @@ const updateCoupon = asyncHandler(async (req, res) => {
         { new: true, runValidators: true }
     );
 
-    res.status(200).json(coupon);
+    res.status(200).json({ success: true, data: coupon });
 });
 
 const deleteCoupon = asyncHandler(async (req, res) => {
@@ -77,7 +77,7 @@ const deleteCoupon = asyncHandler(async (req, res) => {
     }
 
     await coupons.findByIdAndDelete(id);
-    res.status(200).json({ message: 'Coupon deleted successfully.' });
+    res.status(200).json({ success: true,  message: 'Coupon deleted successfully.' });
 });
 
 const patchCoupon = asyncHandler(async (req, res) => {
@@ -108,7 +108,7 @@ const patchCoupon = asyncHandler(async (req, res) => {
         { new: true, runValidators: true }
     );
 
-    res.status(200).json(coupon);
+    res.status(200).json({ success: true, data: coupon });
 });
 
 module.exports = {

@@ -27,8 +27,7 @@ const createQuery = asyncHandler(async (req, res) => {
     attachments,
   });
 
-  res.status(201).json({
-    success: true,
+  res.status(201).json({ success: true, 
     message: "Query submitted successfully",
     query,
   });
@@ -44,8 +43,7 @@ const getMyQueries = asyncHandler(async (req, res) => {
     createdAt: -1,
   });
 
-  res.status(200).json({
-    success: true,
+  res.status(200).json({ success: true, 
     queries,
   });
 });
@@ -87,8 +85,7 @@ const customerReply = asyncHandler(async (req, res) => {
 
   await query.save();
 
-  res.status(200).json({
-    success: true,
+  res.status(200).json({ success: true, 
     message: "Reply sent successfully",
     replies: query.replies,
   });
@@ -127,8 +124,7 @@ const adminGetAllQueries = asyncHandler(async (req, res) => {
     .skip(pageSize * (page - 1))
     .sort({ createdAt: -1 });
 
-  res.status(200).json({
-    success: true,
+  res.status(200).json({ success: true, 
     queries,
     page,
     pages: Math.ceil(count / pageSize),
@@ -152,8 +148,7 @@ const adminGetQueryById = asyncHandler(async (req, res) => {
     throw new Error("Query not found");
   }
 
-  res.status(200).json({
-    success: true,
+  res.status(200).json({ success: true, 
     query,
   });
 });
@@ -180,8 +175,7 @@ const adminUpdateStatus = asyncHandler(async (req, res) => {
   query.status = status;
   await query.save();
 
-  res.status(200).json({
-    success: true,
+  res.status(200).json({ success: true, 
     message: `Query status updated to ${status}`,
     status: query.status,
   });
@@ -203,8 +197,7 @@ const adminAssignQuery = asyncHandler(async (req, res) => {
   query.assignedTo = req.body.assignedTo;
   await query.save();
 
-  res.status(200).json({
-    success: true,
+  res.status(200).json({ success: true, 
     message: "Query assigned successfully",
     assignedTo: query.assignedTo,
   });
@@ -240,8 +233,7 @@ const adminReply = asyncHandler(async (req, res) => {
   query.status = "Pending"; // Mark as pending when admin replies
   await query.save();
 
-  res.status(200).json({
-    success: true,
+  res.status(200).json({ success: true, 
     message: "Reply sent successfully",
     replies: query.replies,
   });
@@ -259,8 +251,7 @@ const adminDeleteQuery = asyncHandler(async (req, res) => {
     throw new Error("Query not found");
   }
   await query.deleteOne();
-  res.status(200).json({
-    success: true,
+  res.status(200).json({ success: true, 
     message: "Query deleted successfully",
   });
 });

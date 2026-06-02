@@ -40,7 +40,7 @@ exports.createStaffMember = asyncHandler(async (req, res) => {
             roleId: roleId
         });
 
-        res.status(201).json({
+        res.status(201).json({ success: true, 
             _id: admin._id,
             name: admin.name,
             email: admin.email,
@@ -59,7 +59,7 @@ exports.createStaffMember = asyncHandler(async (req, res) => {
  */
 exports.getAllStaff = asyncHandler(async (req, res) => {
     const staff = await Admin.find().select("-password");
-    res.status(200).json(staff);
+    res.status(200).json({ success: true, data: staff });
 });
 
 // @desc    Register a new admin
@@ -89,7 +89,7 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
     });
 
     if (admin) {
-        res.status(201).json({
+        res.status(201).json({ success: true, 
             _id: admin._id,
             name: admin.name,
             email: admin.email,
@@ -115,7 +115,7 @@ exports.loginAdmin = asyncHandler(async (req, res) => {
     const admin = await Admin.findOne({ email }).select("+password");
 
     if (admin && (await bcrypt.compare(password, admin.password))) {
-        res.status(200).json({
+        res.status(200).json({ success: true, 
             _id: admin._id,
             name: admin.name,
             email: admin.email,
@@ -133,7 +133,7 @@ exports.loginAdmin = asyncHandler(async (req, res) => {
 // @access  Private
 exports.logoutAdmin = asyncHandler(async (req, res) => {
     // Session-less JWT logout is handled on client side by removing token
-    res.status(200).json({ success: true, message: "Logged out successfully", token: null });
+    res.status(200).json({ success: true,  message: "Logged out successfully", token: null });
 });
 
 // @desc    Get admin profile
@@ -142,7 +142,7 @@ exports.logoutAdmin = asyncHandler(async (req, res) => {
 exports.getAdminProfile = asyncHandler(async (req, res) => {
     const admin = await Admin.findById(req.user.id);
     if (admin) {
-        res.status(200).json({
+        res.status(200).json({ success: true, 
             _id: admin._id,
             name: admin.name,
             email: admin.email,
@@ -173,7 +173,7 @@ exports.updateAdminProfile = asyncHandler(async (req, res) => {
 
         const updatedAdmin = await admin.save();
 
-        res.status(200).json({
+        res.status(200).json({ success: true, 
             _id: updatedAdmin._id,
             name: updatedAdmin.name,
             email: updatedAdmin.email,
@@ -254,8 +254,7 @@ exports.requestPasswordOtp = asyncHandler(async (req, res) => {
         `
     });
 
-    res.status(200).json({
-        success: true,
+    res.status(200).json({ success: true, 
         message: emailResult.success 
             ? "Verification OTP sent to your admin email address successfully." 
             : `Verification OTP generated successfully. (SMTP Dispatch Alert: ${emailResult.error || 'Credentials mismatch'})`,
@@ -309,8 +308,7 @@ exports.changePassword = asyncHandler(async (req, res) => {
     // 7. Issue a BRAND NEW token for the current device with the updated tokenVersion
     const newToken = generateToken({ id: admin._id, tokenVersion: admin.tokenVersion });
 
-    res.status(200).json({
-        success: true,
+    res.status(200).json({ success: true, 
         message: "Password changed successfully. All other devices have been logged out.",
         token: newToken
     });
@@ -321,7 +319,7 @@ exports.changePassword = asyncHandler(async (req, res) => {
 // @access  Public
 exports.forgotPassword = asyncHandler(async (req, res) => {
     // Implementation for password reset email goes here
-    res.status(501).json({ message: "Not implemented yet" });
+    res.status(501).json({ success: true,  message: "Not implemented yet" });
 });
 
 // @desc    Reset password
@@ -329,5 +327,5 @@ exports.forgotPassword = asyncHandler(async (req, res) => {
 // @access  Public
 exports.resetPassword = asyncHandler(async (req, res) => {
     // Implementation for resetting password from token goes here
-    res.status(501).json({ message: "Not implemented yet" });
+    res.status(501).json({ success: true,  message: "Not implemented yet" });
 });

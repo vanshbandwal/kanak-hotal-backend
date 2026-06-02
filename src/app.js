@@ -4,7 +4,7 @@ const cors = require('cors')
 const config = require('./config/config')
 const privateRoutes = require('./routes/v1/private')
 const publicRoutes = require('./routes/v2/public')
-
+const path = require('path')
 const { notFound, errorHandler } = require('./middleware/errorMiddleware')
 
 const app = express()
@@ -27,7 +27,6 @@ app.use(cors({
 }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-const path = require('path')
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')))
 
 app.use('/v1', privateRoutes)

@@ -39,8 +39,7 @@ const sendOtp = asyncHandler(async (req, res) => {
     await customer.save();
 
     // ⚠️ In production, send via SMS gateway. For now, return in response.
-    res.status(200).json({
-        success: true,
+    res.status(200).json({ success: true, 
         message: "OTP sent successfully",
         otp, // Remove in production
         isNewUser: !customer.isProfileCompleted
@@ -84,8 +83,7 @@ const verifyOtp = asyncHandler(async (req, res) => {
 
     const token = generateToken({ id: customer._id });
 
-    res.status(200).json({
-        success: true,
+    res.status(200).json({ success: true, 
         message: "Logged in successfully",
         token,
         customer: {
@@ -123,8 +121,7 @@ const completeProfile = asyncHandler(async (req, res) => {
     customer.isProfileCompleted = true;
     await customer.save();
 
-    res.status(200).json({
-        success: true,
+    res.status(200).json({ success: true, 
         message: "Profile completed successfully",
         customer
     });
@@ -164,8 +161,7 @@ const adminSendOtp = asyncHandler(async (req, res) => {
     customer.otpExpiry = otpExpiry;
     await customer.save();
 
-    res.status(200).json({
-        success: true,
+    res.status(200).json({ success: true, 
         message: "OTP sent to customer successfully",
         otp, // In production, this would be sent via SMS
         customerId: customer._id
@@ -207,8 +203,7 @@ const adminVerifyOtp = asyncHandler(async (req, res) => {
     customer.otpExpiry = undefined;
     await customer.save();
 
-    res.status(200).json({
-        success: true,
+    res.status(200).json({ success: true, 
         message: "OTP verified successfully",
         customerId: customer._id
     });
@@ -239,8 +234,7 @@ const adminCompleteProfile = asyncHandler(async (req, res) => {
     customer.isProfileCompleted = true;
     await customer.save();
 
-    res.status(200).json({
-        success: true,
+    res.status(200).json({ success: true, 
         message: "Customer profile completed by admin",
         customer
     });
@@ -269,8 +263,7 @@ const adminGetAllCustomers = asyncHandler(async (req, res) => {
         .skip(pageSize * (page - 1))
         .sort({ createdAt: -1 });
 
-    res.status(200).json({
-        success: true,
+    res.status(200).json({ success: true, 
         customers,
         page,
         pages: Math.ceil(count / pageSize),
@@ -289,7 +282,7 @@ const adminGetCustomerById = asyncHandler(async (req, res) => {
         res.status(404);
         throw new Error("Customer not found");
     }
-    res.status(200).json({ success: true, customer });
+    res.status(200).json({ success: true,  customer });
 });
 
 /**
@@ -314,8 +307,7 @@ const adminUpdateCustomer = asyncHandler(async (req, res) => {
 
     await customer.save();
 
-    res.status(200).json({
-        success: true,
+    res.status(200).json({ success: true, 
         message: "Customer updated successfully",
         customer
     });
@@ -333,7 +325,7 @@ const adminDeleteCustomer = asyncHandler(async (req, res) => {
         throw new Error("Customer not found");
     }
     await customer.deleteOne();
-    res.status(200).json({ success: true, message: "Customer deleted successfully" });
+    res.status(200).json({ success: true,  message: "Customer deleted successfully" });
 });
 
 /**
@@ -349,7 +341,7 @@ const adminToggleStatus = asyncHandler(async (req, res) => {
     }
     customer.isActive = !customer.isActive;
     await customer.save();
-    res.status(200).json({ success: true, message: `Customer ${customer.isActive ? 'activated' : 'deactivated'}`, isActive: customer.isActive });
+    res.status(200).json({ success: true,  message: `Customer ${customer.isActive ? 'activated' : 'deactivated'}`, isActive: customer.isActive });
 });
 
 module.exports = {

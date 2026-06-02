@@ -26,8 +26,7 @@ const signup = asyncHandler(async (req, res) => {
     countryCode: countryCode || "+91"
   })
 
-  res.status(201).json({
-    success: true,
+  res.status(201).json({ success: true, 
     message: "User created successfully",
     user
   })
@@ -51,8 +50,7 @@ const login = asyncHandler(async (req, res) => {
     throw new Error("User not found. Please sign up first.")
   }
 
-  res.status(200).json({
-    success: true,
+  res.status(200).json({ success: true, 
     message: "User found successfully",
     user
   })
@@ -88,8 +86,7 @@ const sendOtp = asyncHandler(async (req, res) => {
   await user.save()
 
   // ⚠️ Never send OTP in production
-  res.status(200).json({
-    success: true,
+  res.status(200).json({ success: true, 
     message: "OTP sent successfully",
     otp // remove this in production
   })
@@ -134,8 +131,7 @@ const verifyOtp = asyncHandler(async (req, res) => {
 
   const token = generateToken({ id: user._id })
 
-  res.status(200).json({
-    success: true,
+  res.status(200).json({ success: true, 
     message: "OTP verified successfully",
     token,
     user
@@ -153,7 +149,7 @@ const logout = asyncHandler(async (req, res) => {
   }
   // Since we don't store tokens in the DB yet, we just return success
   // or we could add a token field to the schema later.
-  res.status(200).json({ success: true, message: "User logged out successfully" })
+  res.status(200).json({ success: true,  message: "User logged out successfully" })
 })
 
 // @desc    Get user profile
@@ -165,7 +161,7 @@ const getProfile = asyncHandler(async (req, res) => {
     res.status(404)
     throw new Error("User not found")
   }
-  res.status(200).json({ success: true, user })
+  res.status(200).json({ success: true,  user })
 })
 
 // @desc    Update user profile
@@ -182,7 +178,7 @@ const updateProfile = asyncHandler(async (req, res) => {
   if (email) user.email = email
 
   await user.save()
-  res.status(200).json({ success: true, user })
+  res.status(200).json({ success: true,  user })
 })
 
 // @desc    Upload user avatar
@@ -200,7 +196,7 @@ const uploadAvatar = asyncHandler(async (req, res) => {
   }
   user.avatar = req.file.path
   await user.save()
-  res.status(200).json({ success: true, user })
+  res.status(200).json({ success: true,  user })
 })
 
 // @desc    Add address
@@ -219,7 +215,7 @@ const addAddress = asyncHandler(async (req, res) => {
   }
   user.addresses.push({ fullName, phone, addressLine1, city, state, country, postalCode, latitude, longitude })
   await user.save()
-  res.status(200).json({ success: true, user })
+  res.status(200).json({ success: true,  user })
 })
 
 // @desc    Update address
@@ -251,7 +247,7 @@ const updateAddress = asyncHandler(async (req, res) => {
   if (longitude) address.longitude = longitude
 
   await user.save()
-  res.status(200).json({ success: true, user })
+  res.status(200).json({ success: true,  user })
 })
 
 // @desc    Get all addresses
@@ -263,7 +259,7 @@ const getAddresses = asyncHandler(async (req, res) => {
     res.status(404)
     throw new Error("User not found")
   }
-  res.status(200).json({ success: true, addresses: user.addresses })
+  res.status(200).json({ success: true,  addresses: user.addresses })
 })
 
 // @desc    Delete address
@@ -278,7 +274,7 @@ const deleteAddress = asyncHandler(async (req, res) => {
   const { id } = req.params
   user.addresses = user.addresses.filter(address => address._id.toString() !== id)
   await user.save()
-  res.status(200).json({ success: true, user })
+  res.status(200).json({ success: true,  user })
 })
 
 // @desc    Set default address
@@ -301,7 +297,7 @@ const setDefaultAddress = asyncHandler(async (req, res) => {
     return addr
   })
   await user.save()
-  res.status(200).json({ success: true, user })
+  res.status(200).json({ success: true,  user })
 })
 
 module.exports = {
