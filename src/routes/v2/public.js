@@ -8,6 +8,7 @@ const subSubcategoryRouter = require('../../module/SubSubcategory/subSubcategory
 const bannerRouter = require('../../module/Banner/banner.route')
 const customerRouter = require('../../module/Customer/customer.route')
 const queryRouter = require('../../module/Query/query.route')
+const cmsRouter = require('../../module/CMS/cms.route')
 
 router.use('/user', userRouter)
 router.use('/admin', adminRouter)
@@ -16,6 +17,7 @@ router.use('/subcategory', subcategoryRouter)
 router.use('/sub-subcategory', subSubcategoryRouter)
 router.use('/customer', customerRouter)
 router.use('/query', queryRouter)
+router.use('/cms', cmsRouter)
 
 // 🌍 PUBLIC Banner Access for Customers
 router.get('/banner', bannerRouter);
