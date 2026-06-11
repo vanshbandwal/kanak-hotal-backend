@@ -20,6 +20,8 @@ const couponsRouter = require('../../module/Coupons/coupons.route')
 const cartRouter = require('../../module/Cart/cart.route')
 const orderRouter = require('../../module/Order/order.route')
 const cmsRouter = require('../../module/CMS/cms.route')
+const reportRouter = require('../../module/Report/report.route')
+const reviewRouter = require('../../module/Review/review.route')
 
 router.use('/user', userRouter)
 router.use('/admin', adminRouter)
@@ -41,4 +43,7 @@ router.use('/coupon', couponsRouter)
 router.use('/cart', cartRouter)
 router.use('/order', orderRouter)
 router.use('/cms', cmsRouter)
+router.use('/report', reportRouter)
+router.use('/review', reviewRouter)
+
 module.exports = router
